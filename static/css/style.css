@@ -1,0 +1,19 @@
+div, p, body{
+	padding: 0;
+	margin: 0;
+}
+body{
+	font-family: Arial, Helvetica, Sans-Serif; 
+	font-size: 16px;
+	background: #eee;
+}
+#container, #head{
+	width: 928px;
+	margin: 0 auto;
+	padding: 16px;
+	background: white;
+
+}
+#container{
+	margin-bottom: 148px;
+}
