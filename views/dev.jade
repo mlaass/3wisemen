@@ -1,0 +1,33 @@
+a(href='/')#head
+#container 
+  h2 post questions
+  h3 Red
+  form.dev-form(action= '/question/red', method='POST')
+    p
+      input(type= 'text', name= 'question[input]', value= '')
+      input(type= 'submit', value= 'post')
+    p.answer
+  h3 blue
+  form.dev-form(action= '/question/blue', method='POST')
+    p
+      input(type= 'text', name= 'question[input]', value= '')
+      input(type= 'submit', value= 'post')
+    p.answer
+  h3 black
+  form.dev-form(action= '/question/black', method='POST')
+    p
+      input(type= 'text', name= 'question[input]', value= '')
+      input(type= 'submit', value= 'post')
+    p.answer
+
+  h2 answer questions
+  h3 Red
+  form.dev-get(action='/open_question/red', method='GET')
+    p
+      input(type='submit', value='get next question')
+  form.dev-form(action= '/answer/red', method='POST')
+  	p.question
+    p
+    	input.input.red(type= 'hidden', name= 'question[input]', value= '')
+      input(type= 'text', name= 'question[out]', value= '')
+      input(type= 'submit', value= 'post')
