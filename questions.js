@@ -1,5 +1,5 @@
 var fs = require('fs');
-var path = __dirname+'/sdb/';
+var path = __dirname+'/questions/';
 var ext ='.json';
 var collections = {};
 var filters = {
@@ -14,7 +14,7 @@ var load = function(collection, callback){
 		fs.readFile(path+collection+ext, function (err, data) {
 			  if (err){
 				  //throw err;
-				  collections[collection] = [];
+				  collections[collection] = {};
 			  }else{
 				  collections[collection] = JSON.parse(data);
 			  }
@@ -32,7 +32,7 @@ module.exports.all = load;
 
 var save = function(collection){
 	if(typeof collections[collection] !== 'undefined'){
-		fs.writeFile(path+collection+ext, JSON.stringify(collections[collection]),function (err) {
+		fs.writeFile(path+collection+ext, JSON.stringify(collections[collection]), function (err) {
 			  if (err){
 				  throw(err);
 			  }
@@ -58,6 +58,7 @@ var search = module.exports.search = function(collection, id, callback){
 		}
 	});
 };
+
 var filter = function(collection, event, entry){
 	if(typeof filters[event].all === 'function'){
 		entry = filters[event].all(entry);
@@ -68,42 +69,69 @@ var filter = function(collection, event, entry){
 	return entry;
 };
 
-module.exports.find = function(collection, id, callback){
-	search(collection, id, function(cl, entry, index){
-		
-		if(typeof callback === 'function'){
-			entry = filter(collection, 'add', entry);
-			callback(entry, collection, index);
-		}
-	});
+var address = function(entry){
+	return entry.input.split(' ').join();
 };
 module.exports.add = function(collection, entry, callback){
 	load(collection, function(cl){
 		entry = filter(collection, 'add', entry);
-		entry.id = cl.length;
-		cl.push(entry);
-		save(collection);
-		if(typeof callback === 'function'){
-			callback(entry, entry.id);
+		var addr = address(entry);
+		if(typeof cl[addr] === 'undefined'){
+			cl[addr] = entry;		
+			save(collection);
+			if(typeof callback === 'function'){
+				callback(entry, addr);
+			}
+		}else if(typeof callback === 'function'){
+			callback(null, addr);
 		}
+			
 	});
 };
-module.exports.remove = function(collection, id, callback){
-	search(collection, id, function(cl, found, index){
-		if(index>=0){
-			cl.splice(index, 1);
-			if(typeof callback === 'function'){
-				callback('success');
-			}
+module.exports.match = function(where, input, callback){
+	var match = function(where, input, callback){
+		var addr = address({input: input});
+		if(typeof where[addr] !== 'undefined'){
+			callback(where[addr]);
 		}else{
-			if(typeof callback === 'function'){
-				callback('fail', new Error('not found'));
-			}
+			callback(null);
 		}
+	};
+	if(typeof where.substr === 'function'){
+		load(where, function(all){
+			match(all, input, callback);
+		});
+	}else if(typeof where.sub !== 'undefined'){
+		match(where.sub, input, callback);
+	}else{
+		callback(null);
+	}
+};
+module.exports.remove = function(collection, input, callback){
+	var addr = address({input: input});
+	if(typeof collection[addr] !== 'undefined'){
+		delete collection[addr];
+		save(collection);
+		callback();
+	}else{
+		callback(new Error('could not find :'+addr));
+	}
+};
+
+module.getRandom = function(where, callback){	
+	load(collection, function(cl){
+		var index=[];
+		for(var i in cl){
+			index.push(i);
+		}
+		var a =Math.parseInt(Math.random()*index.length-1, 10);
+		a= Math.max(a,0);
+		callback(cl[a]);
 	});
 };
 
 module.exports.filter = function(fn, options){
+	options = options || {};
 	options.collection = options.collection || 'all';
 	options.event = options.event || 'add';
 	
