@@ -113,14 +113,16 @@ app.post('/question/:who', all, function(req, res){
 	});
 });
 app.post('/answer/:who', all, function(req, res){
-	sys.puts('answer: ' + req.body.answer);
-	question.remove(req.params.who + '_open', req.body.input);
-	questions.add(req.params.who, req.body.answer);
+	sys.puts('answer'+req.body.question.input+': ' + req.body.question.out);
+	questions.remove(req.params.who + '_open', req.body.question.input);
+	questions.add(req.params.who, req.body.question);
 	res.redirect('/open_question/' + req.params.who);
 });
 
-app.get('open_question/:who', all, function(req, res){
-	questions.getRandom('open_' + req.params.who, function(entry){
+app.get('/open_question/:who', all, function(req, res){
+	questions.getRandom(req.params.who+'_open', function(entry){
+		sys.puts(req.params.who+'_open');
+		sys.puts(entry.input);
 		res.send(entry);
 	});
 });

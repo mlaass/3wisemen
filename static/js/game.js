@@ -13,15 +13,17 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 		           '/img/black_monk_small.png',
 		           '/img/blue_monk_small.png',
 		           '/img/enso.png']);		
-		game.cam = new jo.Camera(0,0);		
-		
+		game.cam = new jo.Camera(0,0);				
 	});
 
 	game.ready(function(){
 		game.state = 'start';
+		game.enso ={
+				pos: jo.point(jo.screen.width/2,87)
+		};
 		game.player = {
 			player: true,
-			pos: new jo.Point(jo.screen.width/2, jo.screen.height-74),
+			pos: new jo.Point(jo.screen.width/2, jo.screen.height-174),
 			img: new Animation([1,2,3,4], 64, 128, jo.files.img.player),
 			draw:  function(){
 				game.player.img.draw({pivot:'center'}, game.player.pos, jo.screen);
@@ -64,7 +66,7 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 					var d = game.player.pos.minus(game.monks[i].pos);
 					var l = d.length();
 					if(l< 74){
-						game.monks.talk(game.monks[i].name);
+						game.monks.talk(game.monks[i].name, game.monks[i]);
 						var dist=47;
 						if(l <dist){
 							d.multiply(1/l);
@@ -79,8 +81,16 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 				game.player.pos.y= 160;
 			}
 		};
-		game.monks.talk =function(name){
-	
+		game.monks.talk = function(name, monk){
+			if(!monk.talking){
+				game.head = monk.head;
+				$('#speech').html('Hello, what is your question?');
+				
+				$('#talk-form').attr('action','/question/'+name);
+				$('#question-input').focus();
+				jo.input.clearKeys();
+				monk.talking=true;
+			}
 		};
 	});
 	
@@ -178,7 +188,7 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 	game.OnDraw(function() {
 		jo.screen.clear(jo.color(0,0,0));
 		//caption('start');
-		jo.files.img.enso.draw({pivot:'center'}, jo.point(jo.screen.width/2,87), jo.screen);
+		jo.files.img.enso.draw({pivot:'center'}, game.enso.pos, jo.screen);
 		game.monks.draw();
 		jo.files.img.logo.draw({pivot:'center'}, jo.point(jo.screen.width-48,jo.screen.height-48), jo.screen);
 		//game.player.draw();

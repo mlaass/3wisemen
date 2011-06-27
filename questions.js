@@ -1,4 +1,5 @@
-var fs = require('fs');
+var fs = require('fs'),
+	sys=require('sys');
 var path = __dirname+'/questions/';
 var ext ='.json';
 var collections = {};
@@ -109,24 +110,33 @@ module.exports.match = function(where, input, callback){
 };
 module.exports.remove = function(collection, input, callback){
 	var addr = address({input: input});
+	console.log('remove'+input);
 	if(typeof collection[addr] !== 'undefined'){
+		console.log(JSON.stringify(collection));
 		delete collection[addr];
+		console.log(JSON.stringify(collection));
 		save(collection);
-		callback();
+		
+		if(typeof callback === 'function'){
+			callback();
+		}
+		
 	}else{
-		callback(new Error('could not find :'+addr));
+		if(typeof callback === 'function'){
+			callback(new Error('could not find :'+addr));
+		}
 	}
 };
 
-module.getRandom = function(where, callback){	
+module.exports.getRandom = function(collection, callback){	
 	load(collection, function(cl){
-		var index=[];
+		var index = [];
 		for(var i in cl){
-			index.push(i);
+			index.push(i);			
 		}
-		var a =Math.parseInt(Math.random()*index.length-1, 10);
-		a= Math.max(a,0);
-		callback(cl[a]);
+		var a = Math.floor(Math.random()*index.length);
+		a = Math.max(Math.min(a, index.length-1),0);		
+		callback(cl[index[a]]);
 	});
 };
 
