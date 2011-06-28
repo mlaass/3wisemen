@@ -1,0 +1,10 @@
+canvas#canvas
+  p unfortunately your browser lacks canvas support! get firefox, chrome, safari or opera to run this game
+  
+#talk
+  img#monk-img
+  p#speech
+  form#talk-form(action='/question/', method='POST')
+    input#question-input(type='text', name='question[input]')
+    input(type='submit', value='ask')
+script( data-main='js/game', src='js/require.js')

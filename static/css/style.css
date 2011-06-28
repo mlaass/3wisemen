@@ -1,0 +1,91 @@
+div, p, body{
+	padding: 0;
+	margin: 0;
+}
+body{
+	font-family: Arial, Helvetica, Serif; 
+	font-size: 16px;
+	background: url('/img/bg.jpg');
+}
+#container, #head{
+	width: 928px;
+	margin: 0 auto;
+	padding: 16px;
+	background: rgba(255,255,255,0.3);
+	display: block;
+}
+#container{
+	margin-bottom: 148px;
+}
+#head{
+	background: url('/img/head.png') no-repeat;
+	height: 191px;
+}
+
+
+#canvas{
+	position: absolute;
+	left:0;
+	top:0;
+	background: url('/img/bg.jpg');
+}
+
+#feedback p{
+	padding: 8px;
+}
+
+#feedback .item{
+	margin: 32px 4px 0 4px;
+	display: inline-block;
+	width: 301px;
+	background: #eee;
+}
+
+.red-talk{
+	width: 64px;
+	height: 64px;
+	background: url(img/red_monk_talk.png);
+}
+.black-talk{
+	width: 64px;
+	height: 64px;
+	background: url(img/black_monk_talk.png);
+}
+.blue-talk{
+	width: 64px;
+	height: 64px;
+	background: url(img/blue_monk_talk.png);
+}
+
+#feedback .name{
+	font-weight: bold;
+	background: #aaa;
+	padding: 8px;
+}
+
+#talk{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 99.9%;
+	padding: 0;
+	z-index: 3;
+	background: url('/img/bg.jpg');
+
+	border: 1px solid black;
+	min-height: 100px;
+}
+#speech{
+		font-family: 'Unkempt', Arial, Helvetica, Serif;
+		padding: 16px;
+		font-size: 24px;
+}
+#question-input{
+ 	width: 74%;
+}
+#talk-form{
+	width: 87%;
+	position: absolute;
+	bottom: 4px;
+	left: 16px;
+}
