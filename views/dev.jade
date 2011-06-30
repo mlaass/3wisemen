@@ -33,3 +33,30 @@ a(href='/')#head
         input.input.red(type= 'hidden', name= 'question[input]', value= '')
         input(type= 'text', name= 'question[out]', value= '')
         input(type= 'submit', value= 'post')
+  
+
+  h3 Black    
+  #black-answers
+    form.question-form(action='/open_question/black', method='GET')
+      p
+        input(type='submit', value='get next question')
+        
+    form.sub-form(action= '/answer/black', method='POST')
+      p.question
+      p
+        input.input.red(type= 'hidden', name= 'question[input]', value= '')
+        input(type= 'text', name= 'question[out]', value= '')
+        input(type= 'submit', value= 'post')
+        
+  h3 Blue    
+  #black-answers
+    form.question-form(action='/open_question/blue', method='GET')
+      p
+        input(type='submit', value='get next question')
+        
+    form.sub-form(action= '/answer/blue', method='POST')
+      p.question
+      p
+        input.input.red(type= 'hidden', name= 'question[input]', value= '')
+        input(type= 'text', name= 'question[out]', value= '')
+        input(type= 'submit', value= 'post')
