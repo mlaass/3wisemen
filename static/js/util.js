@@ -2,7 +2,7 @@ $(document).ready(function(){
 	$(document).ready(function() {
 		$('.dev-form').ajaxForm({
 			success: function(res, status, xhr, form){
-				form.find('.answer').html(res.out);
+				form.find('.answer').html(res.answer);
 			}
 		});
 		$('.question-form').ajaxForm({
@@ -20,7 +20,14 @@ $(document).ready(function(){
 		
 		$('#talk-form').ajaxForm({
 			success: function(res, status, xhr, form){
-				$('#speech').html(res.out);
+				$('#speech').html(res.answer);
+				$('#question-input').val('');
+				$('#talk-form input').blur();
+			}
+		});
+		$('#talk-form').ajaxForm({
+			success: function(res, status, xhr, form){
+				$('#speech').html(res.answer);
 				$('#question-input').val('');
 				$('#talk-form input').blur();
 			}

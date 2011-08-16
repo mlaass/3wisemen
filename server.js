@@ -4,7 +4,6 @@ app = express.createServer();
 
 //environement for google analytics and the like
 var env ={googa: ''};
-var sdb= require('./sdb');
 var questions = require('./questions');
 var secretphrase = 'I think we can work something out...';
 
@@ -90,46 +89,35 @@ app.get('/dev', all, function(req, res){
 		title: title('dev')
 	}});
 });
-
+app.get('/questions/:file', all, function(req, res){
+	questions.all(req.params.file, function(all){
+		sys.puts(req.params.file);
+		res.send(all);
+	});
+});
 app.post('/question/:who', all, function(req, res){
 	var question = req.body.question.input = req.body.question.input.toLowerCase();
 	sys.puts('question for ' + req.params.who+': ' + question);
-	
-	questions.match(req.session.lastAnswer, question, function(answer){
-		if(answer === null){
-			questions.match(req.params.who, question, function(answer){
-				if(answer === null){
-					questions.add(req.params.who + '_open', {input: question });
-					res.send({out: 'I don\'t have an answer, but ' + secretphrase});
-				}else{
-					req.session.lastAnswer = answer;
-					res.send(answer);
-				}				
-			});
-		}else{			
-			req.session.lastAnswer = answer;
-			res.send(answer);
-		}
+	req.body.question.domain= req.params.who;
+	questions.post(req.body.question, function(answer){
+		var result= answer|| {answer: 'I don\'t have an answer, but ' + secretphrase};
+		
+		res.send(result);
 	});
 });
 app.post('/answer/:who', all, function(req, res){
+	sys.puts('answer');
+	sys.puts(req.body.question);
 	sys.puts('answer'+req.body.question.input+': ' + req.body.question.out);
-	questions.remove(req.params.who + '_open', req.body.question.input);
-	questions.add(req.params.who, req.body.question);
-	res.redirect('/open_question/' + req.params.who);
+	questions.answer(req.body.question);
 });
 
 app.get('/open_question/:who', all, function(req, res){
-	questions.getRandom(req.params.who+'_open', function(entry){
-		sys.puts(req.params.who+'_open');
+	questions.getRandom(req.params.who, function(entry){
+		sys.puts(req.params.who);
 		sys.puts(entry.input);
 		res.send(entry);
 	});
-});
-
-questions.filter(function(answer){
-	answer.words= answer.input.split(' ');
-	return answer;
 });
 
 app.listen(10702);

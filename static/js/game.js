@@ -7,12 +7,12 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 	var game = jo.game = new Game({ name: '#canvas', fullscreen: true, fps: 30});
 	game.setup(function(){
 		//preloading of the files we need
-		game.load(['/img/logo.png',
-		           '/img/player.png',
-		           '/img/red_monk_small.png',
-		           '/img/black_monk_small.png',
-		           '/img/blue_monk_small.png',
-		           '/img/enso.png']);		
+		game.load(['img/logo.png',
+		           'img/player.png',
+		           'img/red_monk_small.png',
+		           'img/black_monk_small.png',
+		           'img/blue_monk_small.png',
+		           'img/enso.png'], '/');		
 		game.cam = new jo.Camera(0,0);				
 	});
 
@@ -96,90 +96,31 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 	
 	//main game loop
 	game.OnUpdate(function(ticks){
-		var sp=4;
-		 if(jo.input.k('UP')){
-			 game.player.pos.y-=sp;
-			 game.player.img.frame=1;
-		 }
-		 if(jo.input.k('DOWN')){
-			 game.player.pos.y+=sp;
-			 game.player.img.frame=0;
-		 }
-		 if(jo.input.k('LEFT')){
-			 game.player.pos.x-=sp;
-			 game.player.img.frame=2;
-		 }
-		 if(jo.input.k('RIGHT')){
-			 game.player.pos.x+=sp;
-			 game.player.img.frame=3;
-		 }
-		 game.monks.check();
-
-	});
-	game.editControls= function(){
-		//player.pos.copy(game.cam.toWorld(jo.input.mouse));
-		if(jo.input.k('D') ){
-			jo.log(game.map.data);
-		}
-		if(jo.input.once('P') ){
-			var lvl = game.saveLevel();
-			jo.log(lvl.json);
-		}
-
-		if(jo.input.k('CTRL')|| jo.input.k('ALT')){
-
+		if(game.state === 'start'){
+			
+			var sp=4;
 			 if(jo.input.k('UP')){
-				 game.player.pos.y-=2;
-				 game.player.img.frame=2;
-			 }
-			 if(jo.input.k('DOWN')){
-				 game.player.pos.y+=2;
+				 game.player.pos.y-=sp;
 				 game.player.img.frame=1;
 			 }
+			 if(jo.input.k('DOWN')){
+				 game.player.pos.y+=sp;
+				 game.player.img.frame=0;
+			 }
 			 if(jo.input.k('LEFT')){
-				 game.player.pos.x-=2;
+				 game.player.pos.x-=sp;
+				 game.player.img.frame=2;
 			 }
 			 if(jo.input.k('RIGHT')){
-				 game.player.pos.x+=2;
+				 game.player.pos.x+=sp;
+				 game.player.img.frame=3;
 			 }
+			 game.monks.check();
 		}
-		if(jo.input.once('TAB')){
-			game.tileBrush = (game.tileBrush+1)%game.map.tileSet.tiles.length;
+		if(game.state === 'answer'){
+			
 		}
-		if(jo.tool==='pick'){
-			if(jo.input.once('MOUSE1')){
-				for(var i in game.objects){
-					if(m2d.intersect.pointBox( game.cam.toWorld(jo.input.mouse), game.objects[i])){
-						game.sb.select = game.selection= i;
-						
-						game.sb.fillInspector();
-					}
-				}
-			}else if(jo.input.k('MOUSE1') ){
-				if(game.selection){
-					game.objects[game.selection].pos.copy(game.cam.toWorld(jo.input.mouse));
-				}
-			 }else{
-				 game.selection=false;
-			 }
-		}
-		
-		if(jo.tool==='drag'){
-			 if(jo.input.k('MOUSE1') ){
-				game.cam.subtract(jo.input.mouseMovement());
-			 }
-		}
-		if(jo.tool==='tile'){
-			if(jo.input.k('MOUSE1')){
-				var p=game.cam.toMap(jo.input.mouse);
-				game.map.put(p.x, p.y, {index: game.tileBrush});
-			}
-			if(jo.input.k('MOUSE2')){
-				var p=game.cam.toMap(jo.input.mouse);
-				game.map.put(p.x, p.y, {index: -1});
-			}
-		}
-	};
+	});
 	var caption = function(msg){
 		jo.screen.text({align: 'center', fill: 'white', stroke: 0}, jo.point(jo.screen.width/2, jo.screen.height/2), msg);
 	};
@@ -187,10 +128,10 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 	//main drawing loop get called after each update
 	game.OnDraw(function() {
 		jo.screen.clear(jo.color(0,0,0));
-		//caption('start');
+		caption(game.state);
 		jo.files.img.enso.draw({pivot:'center'}, game.enso.pos, jo.screen);
 		game.monks.draw();
-		jo.files.img.logo.draw({pivot:'center'}, jo.point(jo.screen.width-48,jo.screen.height-48), jo.screen);
+		//jo.files.img.logo.draw({pivot:'center'}, jo.point(jo.screen.width-48,jo.screen.height-48), jo.screen);
 		//game.player.draw();
 	});	
 	
