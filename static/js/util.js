@@ -48,6 +48,14 @@ $(document).ready(function(){
 				console.log(res);
 			}
 		});
+		$('#exitanswer').click(function(e){
+			$('#answer-form').hide();
+			$('#talk-form').show();
+			$('#speech').html('Welcome to the Temple');
+			e.preventDefault();
+			$jo.game.state = 'start';
+			return 0;
+		});
 		$('canvas').click(function(){
 			$('#talk-form input').blur();
 		});

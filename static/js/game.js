@@ -4,7 +4,7 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 	$jo=jo;
 	
 	//the game object needs id of the canvas 
-	var game = jo.game = new Game({ name: '#canvas', fullscreen: true, fps: 30});
+	var game = jo.game = new Game({ name: '#canvas', fullscreen: true, fps: 6});
 	game.setup(function(){
 		//preloading of the files we need
 		game.load(['img/logo.png',
@@ -103,23 +103,37 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 	game.OnUpdate(function(ticks){
 		if(game.state === 'start'){
 			
-			var sp=4;
-			 if(jo.input.k('UP')){
-				 game.player.pos.y-=sp;
-				 game.player.img.frame=1;
-			 }
-			 if(jo.input.k('DOWN')){
-				 game.player.pos.y+=sp;
-				 game.player.img.frame=0;
-			 }
-			 if(jo.input.k('LEFT')){
-				 game.player.pos.x-=sp;
-				 game.player.img.frame=2;
-			 }
-			 if(jo.input.k('RIGHT')){
-				 game.player.pos.x+=sp;
-				 game.player.img.frame=3;
-			 }
+			var sp=27;
+			if(jo.input.k('MOUSE1')){
+		
+				var d = game.player.pos.minus(jo.input.mouse);
+				var l = d.length();
+				if(l !== 0){
+					d.multiply(sp/ l);
+					//d.multiply(sp);
+					game.player.pos.subtract(d);
+				}
+				
+				
+			}else{
+				 if(jo.input.k('UP')){
+					 game.player.pos.y-=sp;
+					 game.player.img.frame=1;
+				 }
+				 if(jo.input.k('DOWN')){
+					 game.player.pos.y+=sp;
+					 game.player.img.frame=0;
+				 }
+				 if(jo.input.k('LEFT')){
+					 game.player.pos.x-=sp;
+					 game.player.img.frame=2;
+				 }
+				 if(jo.input.k('RIGHT')){
+					 game.player.pos.x+=sp;
+					 game.player.img.frame=3;
+				 }
+			}
+
 			 game.monks.check();
 		}
 		if(game.state === 'answer'){
@@ -141,7 +155,8 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 			//game.player.draw();
 		}
 		if(game.state === 'answer'){
-			
+			jo.files.img.enso.draw({pivot:'center'}, game.enso.pos, jo.screen);
+			game.activemonk.img.draw({pivot:'center'}, game.monks[0].pos.plus(jo.point(0,17)), jo.screen);
 		}
 	});	
 	
