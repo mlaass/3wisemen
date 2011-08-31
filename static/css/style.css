@@ -83,7 +83,7 @@ body{
 #question-input{
  	width: 74%;
 }
-#talk-form{
+#talk-form, #answer-form{
 	width: 87%;
 	position: absolute;
 	bottom: 4px;

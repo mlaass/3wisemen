@@ -12,6 +12,9 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 		           'img/red_monk_small.png',
 		           'img/black_monk_small.png',
 		           'img/blue_monk_small.png',
+		           'img/red_monk.png',
+		           'img/black_monk.png',
+		           'img/blue_monk.png',
 		           'img/enso.png'], '/');		
 		game.cam = new jo.Camera(0,0);				
 	});
@@ -87,9 +90,11 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 				$('#speech').html('Hello, what is your question?');
 				
 				$('#talk-form').attr('action','/question/'+name);
+				$('.answer-form').attr('action','/answer/'+name);
 				$('#question-input').focus();
 				jo.input.clearKeys();
 				monk.talking=true;
+				game.activemonk = monk;
 			}
 		};
 	});
@@ -129,10 +134,15 @@ require(['jo/jo', 'jo/Game','jo/Camera', 'jo/Animation'],
 	game.OnDraw(function() {
 		jo.screen.clear(jo.color(0,0,0));
 		caption(game.state);
-		jo.files.img.enso.draw({pivot:'center'}, game.enso.pos, jo.screen);
-		game.monks.draw();
-		//jo.files.img.logo.draw({pivot:'center'}, jo.point(jo.screen.width-48,jo.screen.height-48), jo.screen);
-		//game.player.draw();
+		if(game.state === 'start'){
+			jo.files.img.enso.draw({pivot:'center'}, game.enso.pos, jo.screen);
+			game.monks.draw();
+			//jo.files.img.logo.draw({pivot:'center'}, jo.point(jo.screen.width-48,jo.screen.height-48), jo.screen);
+			//game.player.draw();
+		}
+		if(game.state === 'answer'){
+			
+		}
 	});	
 	
 });

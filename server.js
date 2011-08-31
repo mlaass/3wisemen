@@ -5,7 +5,7 @@ app = express.createServer();
 //environement for google analytics and the like
 var env ={googa: ''};
 var questions = require('./questions');
-var secretphrase = 'I think we can work something out...';
+var secretphrase = 'I think we can work something out';
 
 
 app.configure(function(){    
@@ -99,17 +99,36 @@ app.post('/question/:who', all, function(req, res){
 	var question = req.body.question.input = req.body.question.input.toLowerCase();
 	sys.puts('question for ' + req.params.who+': ' + question);
 	req.body.question.domain= req.params.who;
-	questions.post(req.body.question, function(answer){
-		var result= answer|| {answer: 'I don\'t have an answer, but ' + secretphrase};
-		
-		res.send(result);
-	});
+	if(question === secretphrase.toLowerCase()){
+		res.send({enlighten : true, answer : 'Well that\'s what I was trying to tell you. Now you take my place.'});
+	}else{
+		questions.post(req.body.question, function(answer){
+			var result = answer|| {answer: 'I don\'t have an answer, but ' + secretphrase+'...'};
+			
+			res.send(result);
+		});
+	}
 });
 app.post('/answer/:who', all, function(req, res){
-	sys.puts('answer');
-	sys.puts(req.body.question);
-	sys.puts('answer'+req.body.question.input+': ' + req.body.question.out);
-	questions.answer(req.body.question);
+	sys.puts('answer: '+req.params.who);
+	console.log(req.body.question);
+	
+	if(!(req.body.question.start && req.body.question.start === 'ok')){
+		questions.answer(req.body.question, function(){
+			questions.getRandom(req.params.who, function(entry){
+				sys.puts(req.params.who);
+				sys.puts(entry.input);
+				res.send(entry);
+			});
+		});
+	}else{
+		questions.getRandom(req.params.who, function(entry){
+			sys.puts(req.params.who);
+			sys.puts(entry.input);
+			res.send(entry);
+		});
+	}	
+
 });
 
 app.get('/open_question/:who', all, function(req, res){
@@ -120,4 +139,4 @@ app.get('/open_question/:who', all, function(req, res){
 	});
 });
 
-app.listen(10702);
+app.listen(8000);

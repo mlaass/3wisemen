@@ -1,10 +1,17 @@
 canvas#canvas
-  p unfortunately your browser lacks canvas support! get firefox, chrome, safari or opera to run this game
-  
+	p unfortunately your browser lacks canvas support! get firefox, chrome, safari or opera to run this game
+
 #talk
-  img#monk-img
-  p#speech
-  form#talk-form(action='/question/', method='POST')
-    input#question-input(type='text', name='question[input]')
-    input(type='submit', value='ask')
+	img#monk-img
+	p#speech
+	form#talk-form(action='/question/', method='POST')
+		input#question-input(type='text', name='question[input]')
+		input(type='submit', value='ask')
+	form#step-form.answer-form(action='/answer/', method='POST', style='display:none')
+		input(type='hidden', name='question[start]', value='ok')
+		input(type='submit', value='ok')
+	form#answer-form.answer-form(action='/answer/', method='POST', style='display:none')
+		input#question-question(type='hidden', name='question[question]')
+		input#question-answer(type='text', name='question[answer]')
+		input(type='submit', value='answer')
 script( data-main='js/game', src='js/require.js')

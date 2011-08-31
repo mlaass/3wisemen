@@ -44,13 +44,16 @@ module.exports.getRandom = function(domain, fn){
 		}
 	});
 };
-module.exports.answer = function(question){
+module.exports.answer = function(question, fn){
 	Question.findOne({question: question.question}, function(err, result){
 		if(result){
 			result.answer = question.answer;
-			Question.update(result);
+			Question.update(result, fn);
+			console.log('update');
+		}else{
+			fn();
 		}
-		this.getRandom()
+		
 	});
 };
 module.exports.post = function(question, fn){

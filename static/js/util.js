@@ -23,13 +23,29 @@ $(document).ready(function(){
 				$('#speech').html(res.answer);
 				$('#question-input').val('');
 				$('#talk-form input').blur();
+				
+				if(res.enlighten){
+					form.hide();
+					$('#step-form').show();
+					$jo.game.state = 'answer';
+				}
 			}
 		});
-		$('#talk-form').ajaxForm({
+		$('#step-form').ajaxForm({
 			success: function(res, status, xhr, form){
-				$('#speech').html(res.answer);
-				$('#question-input').val('');
+				$('#speech').html(res.input);
 				$('#talk-form input').blur();
+				form.hide();
+				$('#answer-form').show();
+			}
+		});
+		$('#answer-form').ajaxForm({
+			success: function(res, status, xhr, form){
+				$('#speech').html(res.input);
+				$('#question-answer').val('');
+				$('#question-question').val(res.question);
+				$('#talk-form input').blur();
+				console.log(res);
 			}
 		});
 		$('canvas').click(function(){
