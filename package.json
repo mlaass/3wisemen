@@ -1,0 +1,30 @@
+{
+  "name": "3wisemen",
+  "version": "2.0.0",
+  "description": "An interactive game where you visit a temple and ask questions to three wise monks",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "NODE_ENV=development node app.js",
+    "prod": "NODE_ENV=production node app.js"
+  },
+  "keywords": [
+    "game",
+    "interactive",
+    "wisdom",
+    "monks"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.7",
+    "express-session": "^1.18.1",
+    "pug": "^3.0.3",
+    "dotenv": "^16.4.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

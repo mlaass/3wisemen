@@ -1,10 +1,10 @@
-var fs = require('fs');
-var path = __dirname+'/sdb/';
-var ext ='.json';
-var collections = {};
-var filters = {
-		add: {},
-		find: {}
+const fs = require('fs');
+const path = __dirname + '/sdb/';
+const ext = '.json';
+const collections = {};
+const filters = {
+	add: {},
+	find: {}
 };
 
 module.exports.root = collections;
