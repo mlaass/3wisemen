@@ -1,10 +1,10 @@
-var fs = require('fs');
-var path = __dirname+'/questions/';
-var ext ='.json';
-var collections = {};
-var filters = {
-		add: {},
-		find: {}
+const fs = require('fs');
+const path = __dirname + '/questions/';
+const ext = '.json';
+const collections = {};
+const filters = {
+	add: {},
+	find: {}
 };
 
 module.exports.root = collections;
@@ -108,25 +108,31 @@ module.exports.match = function(where, input, callback){
 	}
 };
 module.exports.remove = function(collection, input, callback){
-	var addr = address({input: input});
-	if(typeof collection[addr] !== 'undefined'){
-		delete collection[addr];
-		save(collection);
-		callback();
-	}else{
-		callback(new Error('could not find :'+addr));
-	}
+	load(collection, function(cl){
+		var addr = address({input: input});
+		if(typeof cl[addr] !== 'undefined'){
+			delete cl[addr];
+			save(collection);
+			if(typeof callback === 'function'){
+				callback();
+			}
+		}else{
+			if(typeof callback === 'function'){
+				callback(new Error('could not find: ' + addr));
+			}
+		}
+	});
 };
 
-module.getRandom = function(where, callback){	
-	load(collection, function(cl){
+module.exports.getRandom = function(where, callback){
+	load(where, function(cl){
 		var index=[];
 		for(var i in cl){
 			index.push(i);
 		}
-		var a =Math.parseInt(Math.random()*index.length-1, 10);
-		a= Math.max(a,0);
-		callback(cl[a]);
+		var a = parseInt(Math.random() * index.length, 10);
+		a = Math.max(a, 0);
+		callback(cl[index[a]]);
 	});
 };
 
